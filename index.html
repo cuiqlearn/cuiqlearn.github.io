@@ -1,5 +1,678 @@
-<html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analítica con SQL para profesionales | cuiqLearn</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 0, 0, 0.3);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #d40000;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #d40000;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2a0505 100%);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="%23d40000" opacity="0.1"/></svg>') repeat;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-100px); }
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-text .highlight {
+            color: #d40000;
+            background: linear-gradient(45deg, #d40000, #ff3333);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text p {
+            font-size: 1.3rem;
+            color: #ccc;
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #d40000, #ff3333);
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(212, 0, 0, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(212, 0, 0, 0.5);
+        }
+
+        .hero-visual {
+            position: relative;
+            text-align: center;
+        }
+
+        .book-mockup {
+            width: 300px;
+            height: 400px;
+            background: linear-gradient(45deg, #d40000, #ff3333);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            transform: perspective(1000px) rotateY(-15deg);
+            box-shadow: 0 20px 60px rgba(212, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .book-mockup:hover {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+
+        .book-title {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 0;
+            background: #1a1a1a;
+            position: relative;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #d40000, transparent);
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #d40000, #ff3333);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(212, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #d40000;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        /* SQL Mindset Section */
+        .sql-mindset {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, #2a0505 0%, #1a1a1a 100%);
+            text-align: center;
+        }
+
+        .sql-mindset h2 {
+            font-size: 3rem;
+            color: #fff;
+            margin-bottom: 2rem;
+        }
+
+        .sql-mindset .highlight {
+            color: #d40000;
+            font-weight: bold;
+        }
+
+        .sql-mindset p {
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        .mindset-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .mindset-step {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 0, 0, 0.2);
+            min-width: 200px;
+            position: relative;
+        }
+
+        .mindset-step::after {
+            content: '→';
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #d40000;
+            font-size: 2rem;
+        }
+
+        .mindset-step:last-child::after {
+            display: none;
+        }
+
+        .mindset-step h4 {
+            color: #d40000;
+            margin-bottom: 1rem;
+        }
+
+        .mindset-step p {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Video Section */
+        .video-section {
+            padding: 6rem 0;
+            background: #0a0a0a;
+            text-align: center;
+        }
+
+        .video-section h2 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 3rem;
+        }
+
+        .video-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(212, 0, 0, 0.3);
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 450px;
+            border: none;
+        }
+
+        /* CTA Section */
+        .final-cta {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, #d40000 0%, #ff3333 100%);
+            text-align: center;
+            color: white;
+        }
+
+        .final-cta h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .final-cta p {
+            font-size: 1.3rem;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button-white {
+            display: inline-block;
+            background: white;
+            color: #d40000;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button-white:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            color: #ccc;
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid rgba(212, 0, 0, 0.3);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #d40000;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .mindset-visual {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .mindset-step::after {
+                content: '↓';
+                right: 50%;
+                transform: translateX(50%);
+                top: 100%;
+                bottom: -30px;
+            }
+
+            .video-container iframe {
+                height: 250px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Scroll animations */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .scroll-animate.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
 <body>
-Site placeholder
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="/images/cuiqlearn.png" alt="">
+                </div>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#características">Características</a></li>
+                        <li><a href="#mindset">Mindset SQL</a></li>
+                        <li><a href="#video">Video</a></li>
+                        <li><a href="#obtener">Obtener Libro</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero" id="inicio">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text fade-in-up">
+                    <h1>Analítica con <span class="highlight">SQL</span> para profesionales</h1>
+                    <p>Transforma tu carrera profesional dominando el análisis de datos con SQL. Desarrolla el mindset necesario para abordar cualquier desafío de negocio.</p>
+                    <a target="_blank" href="https://www.flow.cl/btn.php?token=r2c5198c33dc542d67e39f130b3fd6ebc37e7d2d" class="cta-button">Obtener el Libro</a>
+                </div>
+                <div class="hero-visual fade-in-up">
+                    <div class="book-mockup">
+                        <div class="book-title">
+                            <img src="/images/cover.png" alt="" height="450">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="características">
+        <div class="container">
+            <h2 class="scroll-animate">¿Por qué este libro?</h2>
+            <div class="features-grid">
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">👥</div>
+                    <h3>Para cualquier profesional</h3>
+                    <p>Pensado para cualquier profesional que quiere comenzar o perfeccionar su conocimiento del negocio a través de SQL, sin importar tu nivel actual.</p>
+                </div>
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">📊</div>
+                    <h3>Amplia cobertura de temas</h3>
+                    <p>Cubre una amplia gama de tópicos desde cómo se hace analítica en las empresas hasta casos de uso aplicados con SQL en situaciones reales.</p>
+                </div>
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Mindset SQL único</h3>
+                    <p>Desarrolla el concepto revolucionario de "Mindset SQL": una forma de pensar y abordar los requerimientos de negocio en "modo SQL".</p>
+                </div>
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">💻</div>
+                    <h3>Software cuiqSQL incluido</h3>
+                    <p>Viene con un software de acompañamiento llamado cuiqSQL para que puedas practicar y aplicar inmediatamente lo que aprendes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sql-mindset" id="mindset">
+        <div class="container">
+            <h2 class="scroll-animate">El <span class="highlight">Mindset SQL</span></h2>
+            <p class="scroll-animate">Uno de los puntos más importantes del libro es enseñarte a pensar como un analista de datos. No se trata solo de aprender sintaxis, sino de desarrollar una mentalidad que te permita abordar cualquier problema de negocio de manera estructurada y eficiente.</p>
+            
+            <div class="mindset-visual">
+                <div class="mindset-step scroll-animate">
+                    <h4>Pensar</h4>
+                    <p>Analiza el problema desde la perspectiva del negocio</p>
+                </div>
+                <div class="mindset-step scroll-animate">
+                    <h4>Estructurar</h4>
+                    <p>Organiza los datos y las relaciones</p>
+                </div>
+                <div class="mindset-step scroll-animate">
+                    <h4>Ejecutar</h4>
+                    <p>Implementa la solución con SQL</p>
+                </div>
+                <div class="mindset-step scroll-animate">
+                    <h4>Optimizar</h4>
+                    <p>Mejora el rendimiento y la claridad</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="video-section" id="video">
+        <div class="container">
+            <h2 class="scroll-animate">Conoce más sobre el libro</h2>
+            <div class="video-container scroll-animate">
+                <iframe src="https://www.youtube.com/embed/XIj3l7nOoAw" 
+                        title="Analítica con SQL para profesionales - Video promocional" 
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <section class="final-cta" id="obtener">
+        <div class="container">
+            <h2 class="scroll-animate">¿Listo para transformar tu carrera?</h2>
+            <p class="scroll-animate">Únete a miles de profesionales que ya han revolucionado su forma de trabajar con datos. Desarrolla el Mindset SQL y lleva tu carrera al siguiente nivel.</p>
+            <a target="_blank" href="https://www.flow.cl/btn.php?token=r2c5198c33dc542d67e39f130b3fd6ebc37e7d2d" class="cta-button-white scroll-animate">Obtener el Libro Ahora</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>cuiqLearn</h3>
+                    <p>Transformando profesionales a través del análisis de datos</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Productos</h3>
+                    <p>Analítica con SQL para profesionales</p>
+                    <p>cuiqSQL - Software de acompañamiento</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Contacto</h3>
+                    <p>Información disponible en el libro</p>
+                    <p>Video promocional en YouTube</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 cuiqLearn. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-animate').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Header background on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(0, 0, 0, 0.95)';
+            } else {
+                header.style.background = 'rgba(0, 0, 0, 0.9)';
+            }
+        });
+
+        // Add some interactive elements
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
 </body>
 </html>
